@@ -1,0 +1,353 @@
+\documentclass[11pt, a4paper]{article}
+
+% ── Packages ──────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% ── Colours ───────────────────────────────────────────────
+\definecolor{codegreen}{rgb}{0.25, 0.50, 0.35}
+\definecolor{codegray}{rgb}{0.50, 0.50, 0.50}
+\definecolor{codepurple}{rgb}{0.58, 0.00, 0.82}
+\definecolor{codeblue}{rgb}{0.13, 0.29, 0.53}
+\definecolor{backcolour}{rgb}{0.97, 0.97, 0.97}
+\definecolor{accentred}{rgb}{0.75, 0.12, 0.12}
+
+% ── Code listing style ────────────────────────────────────
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{codeblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{accentred},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{codegray!40},
+    framesep=4pt,
+    xleftmargin=18pt,
+    framexleftmargin=18pt,
+}
+\lstset{style=pythonstyle, language=Python}
+
+% ── Section styling ───────────────────────────────────────
+\titleformat{\section}
+  {\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{codeblue!80}}{\thesubsection}{1em}{}
+
+% ── Hyperlinks ────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    urlcolor=accentred,
+    citecolor=codegreen,
+}
+
+% ── Header/footer ─────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{When Simple Pendulums Get Complicated}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ══════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Title ─────────────────────────────────────────────────
+\begin{center}
+    {\LARGE\bfseries When Simple Pendulums Get Complicated}\\[6pt]
+    {\Large\color{codegray} Why We Need Computers for Physics}\\[20pt]
+    {\large Vivek Karmarkar}\\[4pt]
+    {\color{codegray}\today}
+\end{center}
+
+\vspace{8pt}
+\noindent\rule{\textwidth}{0.5pt}
+
+\begin{quote}
+\itshape
+``The pendulum is perhaps the most studied object in all of physics.
+And yet, after three centuries, it still has something to teach us
+about the limits of the human mind---and the power of the machine.''
+\end{quote}
+
+\vspace{4pt}
+
+% ══════════════════════════════════════════════════════════
+\section{A mass, a string, and gravity}
+
+Consider the humblest of physical systems: a mass $m$ suspended from
+a rigid, massless rod of length $L$, free to swing in a plane under
+gravity.  Let $\theta$ denote the angle the rod makes with the
+downward vertical.  Applying Newton's second law along the tangential
+direction gives us the \textbf{equation of motion}:
+
+\begin{equation}
+    \boxed{\;\ddot{\theta} + \frac{g}{L}\sin\theta = 0\;}
+    \label{eq:full}
+\end{equation}
+
+This is a second-order, nonlinear ordinary differential equation.
+It looks deceptively simple---just five symbols---but that
+$\sin\theta$ hides a world of trouble.
+
+% ══════════════════════════════════════════════════════════
+\section{The textbook trick: small angles}
+
+\subsection{The approximation}
+
+Every introductory physics course makes the same move: assume the
+angle $\theta$ is small enough that
+\begin{equation}
+    \sin\theta \;\approx\; \theta
+    \qquad\text{(valid for } |\theta| \ll 1 \text{ rad).}
+    \label{eq:smallangle}
+\end{equation}
+Substituting \eqref{eq:smallangle} into \eqref{eq:full} yields the
+\textbf{linearised equation}:
+\begin{equation}
+    \ddot{\theta} + \frac{g}{L}\,\theta = 0.
+    \label{eq:linear}
+\end{equation}
+
+\subsection{The exact solution}
+
+Equation~\eqref{eq:linear} is the simple harmonic oscillator---one of
+the few differential equations we can solve completely by hand.
+Define the natural frequency
+\begin{equation}
+    \omega_0 = \sqrt{\frac{g}{L}}\,.
+\end{equation}
+The characteristic equation $r^2 + \omega_0^2 = 0$ has roots
+$r = \pm\, i\omega_0$, so the general solution is
+\begin{equation}
+    \theta(t) = A\cos(\omega_0 t) + B\sin(\omega_0 t).
+\end{equation}
+With the natural initial conditions $\theta(0) = \theta_0$ and
+$\dot{\theta}(0) = 0$ (released from rest), we obtain
+\begin{equation}
+    \boxed{\;\theta(t) = \theta_0 \cos\!\left(\sqrt{\frac{g}{L}}\; t\right)\;}
+    \label{eq:shm_solution}
+\end{equation}
+and the famous period formula
+\begin{equation}
+    T = 2\pi\sqrt{\frac{L}{g}}\,.
+    \label{eq:period}
+\end{equation}
+
+\subsection{Why this is beautiful}
+
+Equation~\eqref{eq:shm_solution} is remarkable.  It tells us that:
+\begin{itemize}[itemsep=3pt]
+    \item The period $T$ depends \emph{only} on the length $L$ and gravity $g$---not
+          on the mass, not on the amplitude.  This is Galileo's isochronism.
+    \item The motion is a pure cosine: perfectly periodic, perfectly symmetric.
+    \item We have a \emph{closed-form expression}.  Given any $t$, we can compute
+          $\theta(t)$ with a pocket calculator.
+\end{itemize}
+
+This is physics at its most elegant.  One equation, one exact answer.
+
+% ══════════════════════════════════════════════════════════
+\section{When elegance breaks down}
+
+\subsection{The honest equation}
+
+Now suppose we push the pendulum to $\theta_0 = 90^\circ$, or $120^\circ$, or
+release it from nearly inverted.  The small-angle approximation
+collapses: at $\theta = \pi/2$, the error in
+$\sin\theta \approx \theta$ is already $36\%$.
+
+We are forced back to the full nonlinear equation~\eqref{eq:full}:
+\[
+    \ddot{\theta} + \frac{g}{L}\sin\theta = 0.
+\]
+Can we solve this exactly?  \emph{Sort of.}  The exact period turns
+out to be
+\begin{equation}
+    T_{\text{exact}} = 4\sqrt{\frac{L}{g}}\; K\!\left(\sin\frac{\theta_0}{2}\right),
+    \label{eq:exact_period}
+\end{equation}
+where $K(k)$ is the \textbf{complete elliptic integral of the first
+kind}:
+\begin{equation}
+    K(k) = \int_0^{\pi/2} \frac{d\phi}{\sqrt{1 - k^2\sin^2\phi}}\,.
+\end{equation}
+This integral has no closed-form expression in terms of elementary
+functions.  There is no neat formula like
+Eq.~\eqref{eq:period}---just an infinite series, a table of values,
+or a numerical routine.
+
+\subsection{The deeper problem}
+
+And it gets worse.  Even $T_{\text{exact}}$ only gives the
+\emph{period}.  If we want the full trajectory $\theta(t)$ at every
+instant, we need the \textbf{Jacobi elliptic functions}---objects
+that most physicists have heard of but few have used by hand.
+
+The honest truth is this: \emph{even the simplest mechanical system
+resists exact, elementary solution once we remove a single
+approximation.}
+
+This is not a failure of physics.  It is a fact about nonlinear
+differential equations.
+
+% ══════════════════════════════════════════════════════════
+\section{Enter the computer}
+
+\subsection{Reformulating as a system}
+
+What we \emph{can} do is convert Eq.~\eqref{eq:full} into a
+first-order system by introducing the angular velocity
+$\omega = \dot{\theta}$:
+\begin{equation}
+    \begin{cases}
+        \;\dfrac{d\theta}{dt} = \omega \\[10pt]
+        \;\dfrac{d\omega}{dt}  = -\dfrac{g}{L}\sin\theta
+    \end{cases}
+    \label{eq:system}
+\end{equation}
+This is the form that numerical integrators love.  Given an initial
+state $(\theta_0, \omega_0)$, an algorithm like the classical
+\textbf{Runge--Kutta method} (RK4) can march forward in time, step by
+step, to any desired accuracy.
+
+\subsection{The code}
+
+The following Python script solves system~\eqref{eq:system} on a grid
+of initial conditions and renders the \textbf{phase portrait}---a map
+of all possible trajectories in the $(\theta, \omega)$ plane.
+
+\begin{lstlisting}[caption={Phase portrait of the nonlinear pendulum.}]
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+g = 9.81   # gravitational acceleration (m/s^2)
+L = 1.0    # pendulum length (m)
+
+# Phase-space grid
+theta = np.linspace(-2 * np.pi, 2 * np.pi, 400)
+omega = np.linspace(-8, 8, 400)
+THETA, OMEGA = np.meshgrid(theta, omega)
+
+# Vector field (right-hand side of the ODE system)
+dtheta_dt = OMEGA
+domega_dt = -(g / L) * np.sin(THETA)
+speed = np.sqrt(dtheta_dt**2 + domega_dt**2)
+
+# Plot
+fig, ax = plt.subplots(figsize=(12, 8))
+strm = ax.streamplot(
+    THETA, OMEGA, dtheta_dt, domega_dt,
+    color=speed, cmap="coolwarm", density=2.5,
+    linewidth=0.7, arrowsize=0.7,
+)
+fig.colorbar(strm.lines, ax=ax, label="Phase-space speed")
+
+# Separatrix: energy E = gL (unstable equilibrium)
+theta_sep = np.linspace(-2*np.pi, 2*np.pi, 1000)
+omega_sep = np.sqrt(2*g/L * np.maximum(1+np.cos(theta_sep), 0))
+ax.plot(theta_sep,  omega_sep, "k--", linewidth=1.8)
+ax.plot(theta_sep, -omega_sep, "k--", linewidth=1.8)
+
+ax.set_xlabel("theta (rad)")
+ax.set_ylabel("omega (rad/s)")
+ax.set_title("Phase Portrait: Nonlinear Pendulum")
+plt.savefig("pendulum_phase_portrait.png", dpi=150)
+\end{lstlisting}
+
+% ══════════════════════════════════════════════════════════
+\section{The phase portrait}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{pendulum_phase_portrait.png}
+    \caption{Phase portrait of the nonlinear pendulum
+             $\ddot{\theta} + (g/L)\sin\theta = 0$.
+             Streamlines are coloured by speed in phase space.
+             The dashed black curves are the \textbf{separatrices}.
+             Green dots mark stable equilibria (pendulum hanging down);
+             red dots mark unstable equilibria (pendulum inverted).}
+    \label{fig:phase}
+\end{figure}
+
+\subsection{Reading the portrait}
+
+Figure~\ref{fig:phase} encodes the complete dynamics of the pendulum
+in a single image.  Three qualitatively distinct regimes are visible:
+
+\begin{enumerate}[itemsep=4pt]
+    \item \textbf{Libration} (closed orbits inside the separatrix).
+          The pendulum swings back and forth without going over the top.
+          Smaller loops correspond to smaller amplitudes---approaching
+          simple harmonic motion near the origin.
+
+    \item \textbf{Rotation} (wavy curves outside the separatrix).
+          The pendulum has enough energy to spin continuously.
+          Curves above the separatrix represent counter-clockwise
+          rotation; curves below, clockwise.
+
+    \item \textbf{The separatrix} (dashed curves).
+          This is the critical boundary---the trajectory of a pendulum
+          released with \emph{exactly} enough energy to reach the
+          inverted position.  It would take infinite time to arrive there,
+          asymptotically approaching the unstable equilibrium.
+\end{enumerate}
+
+Notice that the closed orbits are \emph{not} perfect ellipses.
+In the small-angle limit, they would be---but the nonlinearity of
+$\sin\theta$ distorts them, stretching the orbits as the amplitude
+grows.  This distortion \emph{is} the large-angle physics that no
+linearisation can capture.
+
+% ══════════════════════════════════════════════════════════
+\section{The moral}
+
+The pendulum is a first-year physics problem, and yet its exact
+behaviour lies beyond elementary mathematics.  The small-angle
+solution~\eqref{eq:shm_solution} is a beautiful special case, but it
+is just that: a special case.
+
+The general solution requires either elliptic functions (an 18th-century
+invention that most scientists never encounter) or numerical
+computation.  The phase portrait in Figure~\ref{fig:phase} would have
+taken Euler weeks of hand calculation.  A modern laptop produces it in
+under a second.
+
+This is not a story about pendulums.  It is a story about the vast
+majority of differential equations in physics, engineering, and
+biology.  Nonlinearity is the rule; exact solutions are the exception.
+And that is why we need computers for physics.
+
+\vfill
+\begin{center}
+    \small\color{codegray}
+    Code and figure available at
+    \url{https://github.com/VivekKarmarkar/remote-control-test}
+\end{center}
+
+\end{document}
