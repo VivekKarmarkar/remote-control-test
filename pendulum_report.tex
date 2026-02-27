@@ -128,7 +128,7 @@ The tangential component of the gravitational force on the mass is
 $F_\tau = -mg\sin\theta$ (the minus sign because it acts to restore
 the pendulum toward $\theta = 0$).  The tangential acceleration is
 $a_\tau = L\ddot{\theta}$.  Newton's second law, $F_\tau = m\,a_\tau$,
-gives
+gives~\cite{taylor}
 \[
     mL\ddot{\theta} = -mg\sin\theta,
 \]
@@ -215,7 +215,8 @@ Equation~\eqref{eq:shm_solution} tells us that:
     \item We have a \emph{closed-form expression}.  Given any $t$, we
           can compute $\theta(t)$ with a pocket calculator.
 \end{itemize}
-This is physics at its most elegant.  One equation, one exact answer.
+This is physics at its most elegant.  One equation, one exact
+answer~\cite{taylor}.
 
 % ══════════════════════════════════════════════════════════
 \section{When elegance breaks down}
@@ -241,7 +242,7 @@ $\dot{\theta}$:
     \dot{\theta}\,\ddot{\theta}
     + \frac{g}{L}\,\dot{\theta}\sin\theta = 0.
 \]
-The left side is an exact time derivative:
+The left side is an exact time derivative~\cite{goldstein}:
 \[
     \frac{d}{dt}\!\left[
         \tfrac{1}{2}\dot{\theta}^{\,2}
@@ -307,7 +308,7 @@ $\theta = 0$ to $\theta = \theta_0$) is
     \label{eq:quarter_period}
 \end{equation}
 Using the substitution $\sin(\theta/2) = k\sin\phi$ with
-$k = \sin(\theta_0/2)$, the integral transforms into
+$k = \sin(\theta_0/2)$, the integral transforms into~\cite{goldstein}
 \begin{equation}
     \boxed{\;
     T(\theta_0)
@@ -335,8 +336,8 @@ functions---this is where pencil-and-paper physics reaches its limit.
 
 Even the exact period formula only gives one number.  If we want the
 full trajectory $\theta(t)$ at every instant, we need the
-\textbf{Jacobi elliptic functions}---objects that most physicists
-have heard of but few have used by hand.
+\textbf{Jacobi elliptic functions}~\cite{goldstein}---objects that
+most physicists have heard of but few have used by hand.
 
 The honest truth is this: \emph{even the simplest mechanical system
 resists exact, elementary solution once we remove a single
@@ -366,7 +367,7 @@ An equilibrium is a state where $\dot{\theta} = \ddot{\theta} = 0$,
 i.e., $\sin\theta = 0$.  This gives
 $\theta^* = 0$ (hanging down) and $\theta^* = \pi$ (inverted).
 
-To classify their stability, we linearise the system
+To classify their stability~\cite{strogatz}, we linearise the system
 $(\dot{\theta}, \dot{\omega}) = (\omega,\, -(g/L)\sin\theta)$
 around each fixed point.  The Jacobian is
 \[
@@ -439,7 +440,8 @@ $\omega = \dot{\theta}$:
     \label{eq:system}
 \end{equation}
 Given an initial state $(\theta_0, \omega_0)$, we march forward in
-time using the classical \textbf{Runge--Kutta method} (RK4).  The
+time using the classical \textbf{Runge--Kutta method}
+(RK4)~\cite{press}.  The
 core step advances the state by one time increment $h$:
 
 \begin{lstlisting}[caption={The RK4 integration step.}]
@@ -614,7 +616,8 @@ Python,''
 \label{app:code}
 
 The following scripts reproduce all figures in this report.  They
-require \texttt{numpy}, \texttt{matplotlib}, and \texttt{scipy}.
+require \texttt{numpy}, \texttt{matplotlib}, and
+\texttt{scipy}~\cite{scipy}.
 
 \subsection{Core integrator (\texttt{rk4\_pendulum.py})}
 
