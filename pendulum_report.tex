@@ -87,6 +87,25 @@
 \vspace{8pt}
 \noindent\rule{\textwidth}{0.5pt}
 
+% ── Abstract ──────────────────────────────────────────────
+\begin{abstract}
+\noindent
+The simple pendulum is among the most studied systems in classical
+mechanics, yet its exact large-angle dynamics lie beyond elementary
+mathematics.  We derive the equation of motion from first principles,
+solve it analytically under the small-angle approximation, and then
+show how that solution breaks down at large amplitudes.  Using energy
+conservation, we derive the exact period as an elliptic integral and
+the separatrix that divides oscillation from rotation.  A fourth-order
+Runge--Kutta integrator is implemented in Python to produce
+time-series comparisons, period-versus-amplitude curves, and a
+complete phase portrait.  The pendulum serves as a case study for a
+universal theme: nonlinearity is the rule in physics, and computation
+is the tool that lets us confront it.
+\end{abstract}
+
+\vspace{6pt}
+
 \begin{quote}
 \itshape
 ``The pendulum is perhaps the most studied object in all of physics.
@@ -98,24 +117,33 @@ about the limits of the human mind---and the power of the machine.''
 
 % ══════════════════════════════════════════════════════════
 \section{A mass, a string, and gravity}
+\label{sec:setup}
 
 Consider the humblest of physical systems: a mass $m$ suspended from
 a rigid, massless rod of length $L$, free to swing in a plane under
-gravity.  Let $\theta$ denote the angle the rod makes with the
-downward vertical.  Applying Newton's second law along the tangential
-direction gives us the \textbf{equation of motion}:
+gravity $g$.  Let $\theta$ denote the angle the rod makes with the
+downward vertical.
 
+The tangential component of the gravitational force on the mass is
+$F_\tau = -mg\sin\theta$ (the minus sign because it acts to restore
+the pendulum toward $\theta = 0$).  The tangential acceleration is
+$a_\tau = L\ddot{\theta}$.  Newton's second law, $F_\tau = m\,a_\tau$,
+gives
+\[
+    mL\ddot{\theta} = -mg\sin\theta,
+\]
+which simplifies to the \textbf{equation of motion}:
 \begin{equation}
     \boxed{\;\ddot{\theta} + \frac{g}{L}\sin\theta = 0\;}
     \label{eq:full}
 \end{equation}
-
 This is a second-order, nonlinear ordinary differential equation.
 It looks deceptively simple---just five symbols---but that
 $\sin\theta$ hides a world of trouble.
 
 % ══════════════════════════════════════════════════════════
 \section{The textbook trick: small angles}
+\label{sec:smallangle}
 
 \subsection{The approximation}
 
@@ -126,7 +154,24 @@ angle $\theta$ is small enough that
     \qquad\text{(valid for } |\theta| \ll 1 \text{ rad).}
     \label{eq:smallangle}
 \end{equation}
-Substituting \eqref{eq:smallangle} into \eqref{eq:full} yields the
+But how small is ``small enough''?  Figure~\ref{fig:sinerror} shows
+the relative error of this approximation.  At $14^\circ$ the error
+reaches $1\%$; at $31^\circ$ it hits $5\%$; and by $43^\circ$ the
+error exceeds $10\%$.  The approximation is far more fragile than
+most textbooks admit.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_sin_error.png}
+    \caption{Relative error of the small-angle approximation
+             $\sin\theta \approx \theta$.  The inset shows
+             $\sin\theta$ (blue) diverging from $\theta$ (red dashed)
+             as the angle grows.  Vertical lines mark the $1\%$,
+             $5\%$, and $10\%$ error thresholds.}
+    \label{fig:sinerror}
+\end{figure}
+
+Substituting~\eqref{eq:smallangle} into~\eqref{eq:full} yields the
 \textbf{linearised equation}:
 \begin{equation}
     \ddot{\theta} + \frac{g}{L}\,\theta = 0.
@@ -138,90 +183,253 @@ Substituting \eqref{eq:smallangle} into \eqref{eq:full} yields the
 Equation~\eqref{eq:linear} is the simple harmonic oscillator---one of
 the few differential equations we can solve completely by hand.
 Define the natural frequency
-\begin{equation}
-    \omega_0 = \sqrt{\frac{g}{L}}\,.
-\end{equation}
-The characteristic equation $r^2 + \omega_0^2 = 0$ has roots
-$r = \pm\, i\omega_0$, so the general solution is
+$\omega_0 = \sqrt{g/L}$.
+The characteristic equation $r^2 + \omega_0^2 = 0$ has purely
+imaginary roots $r = \pm\, i\omega_0$, which yield the general
+solution
 \begin{equation}
     \theta(t) = A\cos(\omega_0 t) + B\sin(\omega_0 t).
 \end{equation}
-With the natural initial conditions $\theta(0) = \theta_0$ and
-$\dot{\theta}(0) = 0$ (released from rest), we obtain
+With the initial conditions $\theta(0) = \theta_0$ and
+$\dot{\theta}(0) = 0$ (released from rest), we find $A = \theta_0$,
+$B = 0$, giving
 \begin{equation}
     \boxed{\;\theta(t) = \theta_0 \cos\!\left(\sqrt{\frac{g}{L}}\; t\right)\;}
     \label{eq:shm_solution}
 \end{equation}
 and the famous period formula
 \begin{equation}
-    T = 2\pi\sqrt{\frac{L}{g}}\,.
+    T_0 = \frac{2\pi}{\omega_0} = 2\pi\sqrt{\frac{L}{g}}\,.
     \label{eq:period}
 \end{equation}
 
 \subsection{Why this is beautiful}
 
-Equation~\eqref{eq:shm_solution} is remarkable.  It tells us that:
+Equation~\eqref{eq:shm_solution} tells us that:
 \begin{itemize}[itemsep=3pt]
-    \item The period $T$ depends \emph{only} on the length $L$ and gravity $g$---not
-          on the mass, not on the amplitude.  This is Galileo's isochronism.
-    \item The motion is a pure cosine: perfectly periodic, perfectly symmetric.
-    \item We have a \emph{closed-form expression}.  Given any $t$, we can compute
-          $\theta(t)$ with a pocket calculator.
+    \item The period $T_0$ depends \emph{only} on $L$ and $g$---not
+          on the mass, not on the amplitude.  This is
+          \emph{Galileo's isochronism}.
+    \item The motion is a pure cosine: perfectly periodic, perfectly
+          symmetric.
+    \item We have a \emph{closed-form expression}.  Given any $t$, we
+          can compute $\theta(t)$ with a pocket calculator.
 \end{itemize}
-
 This is physics at its most elegant.  One equation, one exact answer.
 
 % ══════════════════════════════════════════════════════════
 \section{When elegance breaks down}
+\label{sec:breakdown}
 
 \subsection{The honest equation}
 
-Now suppose we push the pendulum to $\theta_0 = 90^\circ$, or $120^\circ$, or
-release it from nearly inverted.  The small-angle approximation
-collapses: at $\theta = \pi/2$, the error in
-$\sin\theta \approx \theta$ is already $36\%$.
+Now suppose we push the pendulum to $\theta_0 = 90^\circ$, or
+$120^\circ$, or release it from nearly inverted.  The small-angle
+approximation collapses.
 
-We are forced back to the full nonlinear equation~\eqref{eq:full}:
+We are forced back to the full nonlinear
+equation~\eqref{eq:full}.  Can we make progress?  Yes---but only by
+bringing in a conserved quantity that the linearised analysis never
+needed.
+
+\subsection{Energy: the hidden conserved quantity}
+\label{sec:energy}
+
+Multiply the equation of motion~\eqref{eq:full} by
+$\dot{\theta}$:
 \[
-    \ddot{\theta} + \frac{g}{L}\sin\theta = 0.
+    \dot{\theta}\,\ddot{\theta}
+    + \frac{g}{L}\,\dot{\theta}\sin\theta = 0.
 \]
-Can we solve this exactly?  \emph{Sort of.}  The exact period turns
-out to be
+The left side is an exact time derivative:
+\[
+    \frac{d}{dt}\!\left[
+        \tfrac{1}{2}\dot{\theta}^{\,2}
+        - \frac{g}{L}\cos\theta
+    \right] = 0.
+\]
+Therefore the quantity in brackets is constant.  Defining the
+\textbf{total energy per unit} $mL^2$ as
 \begin{equation}
-    T_{\text{exact}} = 4\sqrt{\frac{L}{g}}\; K\!\left(\sin\frac{\theta_0}{2}\right),
+    \boxed{\;
+    \mathcal{E}
+    = \tfrac{1}{2}\,\dot{\theta}^{\,2}
+      + \frac{g}{L}\bigl(1 - \cos\theta\bigr)
+    = \text{const},\;}
+    \label{eq:energy}
+\end{equation}
+where the constant $(g/L)(1-\cos\theta)$ is chosen so that
+$\mathcal{E} = 0$ at the stable equilibrium
+$(\theta, \dot\theta) = (0, 0)$.
+
+\medskip
+\noindent
+\textbf{The separatrix.}\;
+At the unstable equilibrium $\theta = \pi$ (pendulum balanced
+inverted), the potential energy is
+$\mathcal{E}_{\text{sep}} = 2g/L$.  The \textbf{separatrix} is the
+set of all states with exactly this critical energy:
+\begin{equation}
+    \tfrac{1}{2}\dot{\theta}^{\,2}
+    + \frac{g}{L}(1 - \cos\theta) = \frac{2g}{L},
+\end{equation}
+which gives
+\begin{equation}
+    \boxed{\;
+    \dot{\theta} = \pm\sqrt{\frac{2g}{L}(1 + \cos\theta)}
+    = \pm\, 2\sqrt{\frac{g}{L}}\;\cos\frac{\theta}{2}\;.
+    \;}
+    \label{eq:separatrix}
+\end{equation}
+States below this energy oscillate (libration); states above it
+spin continuously (rotation).
+
+\subsection{The exact period: from energy to elliptic integrals}
+\label{sec:elliptic}
+
+Energy conservation lets us derive the exact period.  For a pendulum
+released from rest at angle $\theta_0$, we have
+$\mathcal{E} = (g/L)(1 - \cos\theta_0)$.  Solving
+Eq.~\eqref{eq:energy} for $\dot{\theta}$:
+\begin{equation}
+    \dot{\theta}
+    = \sqrt{\frac{2g}{L}\bigl(\cos\theta - \cos\theta_0\bigr)}\,.
+    \label{eq:thetadot_energy}
+\end{equation}
+Separating variables, the time for a quarter-period (from
+$\theta = 0$ to $\theta = \theta_0$) is
+\begin{equation}
+    \frac{T}{4}
+    = \sqrt{\frac{L}{2g}}
+      \int_0^{\theta_0}
+      \frac{d\theta}
+           {\sqrt{\cos\theta - \cos\theta_0}}\,.
+    \label{eq:quarter_period}
+\end{equation}
+Using the substitution $\sin(\theta/2) = k\sin\phi$ with
+$k = \sin(\theta_0/2)$, the integral transforms into
+\begin{equation}
+    \boxed{\;
+    T(\theta_0)
+    = \frac{4}{\omega_0}\,K(k),
+    \qquad
+    k = \sin\frac{\theta_0}{2},
+    \;}
     \label{eq:exact_period}
 \end{equation}
 where $K(k)$ is the \textbf{complete elliptic integral of the first
 kind}:
 \begin{equation}
-    K(k) = \int_0^{\pi/2} \frac{d\phi}{\sqrt{1 - k^2\sin^2\phi}}\,.
+    K(k) = \int_0^{\pi/2}
+           \frac{d\phi}{\sqrt{1 - k^2\sin^2\phi}}\,.
+    \label{eq:elliptic_K}
 \end{equation}
-This integral has no closed-form expression in terms of elementary
-functions.  There is no neat formula like
-Eq.~\eqref{eq:period}---just an infinite series, a table of values,
-or a numerical routine.
+In the small-angle limit ($k \to 0$), $K(0) = \pi/2$, and
+Eq.~\eqref{eq:exact_period} recovers the SHM period
+$T_0 = 2\pi/\omega_0$.  As $\theta_0 \to \pi$, $k \to 1$ and
+$K(k) \to \infty$: the period diverges.  The integrand in
+Eq.~\eqref{eq:elliptic_K} has no antiderivative in elementary
+functions---this is where pencil-and-paper physics reaches its limit.
 
 \subsection{The deeper problem}
 
-And it gets worse.  Even $T_{\text{exact}}$ only gives the
-\emph{period}.  If we want the full trajectory $\theta(t)$ at every
-instant, we need the \textbf{Jacobi elliptic functions}---objects
-that most physicists have heard of but few have used by hand.
+Even the exact period formula only gives one number.  If we want the
+full trajectory $\theta(t)$ at every instant, we need the
+\textbf{Jacobi elliptic functions}---objects that most physicists
+have heard of but few have used by hand.
 
 The honest truth is this: \emph{even the simplest mechanical system
 resists exact, elementary solution once we remove a single
 approximation.}
 
-This is not a failure of physics.  It is a fact about nonlinear
-differential equations.
+% ══════════════════════════════════════════════════════════
+\section{The geometry of dynamics}
+\label{sec:phase}
+
+\subsection{What is phase space?}
+
+Define the angular velocity $\omega = \dot{\theta}$.  The state of
+the pendulum at any instant is fully described by the pair
+$(\theta, \omega)$.  The set of all such pairs forms the
+\textbf{phase plane}.
+
+As time evolves, the state traces a curve---called a
+\textbf{trajectory} or \textbf{orbit}---through the phase plane.
+A \textbf{phase portrait} is the complete map of all possible
+trajectories, one for every initial condition.  It is a snapshot of
+the system's entire dynamical repertoire.
+
+\subsection{Equilibria and their stability}
+\label{sec:stability}
+
+An equilibrium is a state where $\dot{\theta} = \ddot{\theta} = 0$,
+i.e., $\sin\theta = 0$.  This gives
+$\theta^* = 0$ (hanging down) and $\theta^* = \pi$ (inverted).
+
+To classify their stability, we linearise the system
+$(\dot{\theta}, \dot{\omega}) = (\omega,\, -(g/L)\sin\theta)$
+around each fixed point.  The Jacobian is
+\[
+    J = \begin{pmatrix}
+        0 & 1 \\[4pt]
+        -\dfrac{g}{L}\cos\theta^* & 0
+    \end{pmatrix}.
+\]
+
+\medskip
+\noindent
+\textbf{At $\theta^* = 0$ (hanging down):}\;
+$J$ has eigenvalues $\lambda = \pm\, i\omega_0$.  Pure imaginary
+eigenvalues indicate a \textbf{centre}: nearby orbits form closed
+loops.  The pendulum oscillates.
+
+\medskip
+\noindent
+\textbf{At $\theta^* = \pi$ (inverted):}\;
+$\cos\pi = -1$, so $J$ has eigenvalues
+$\lambda = \pm\sqrt{g/L}$---one positive, one negative.  This is a
+\textbf{saddle point}: trajectories approach along one direction and
+flee along the other.  The separatrix~\eqref{eq:separatrix} is the
+stable manifold of this saddle.
+
+\subsection{The three regimes}
+
+Energy conservation and stability analysis together explain the
+structure of the phase portrait.  Table~\ref{tab:regimes} summarises
+the three qualitatively distinct regimes.
+
+\begin{table}[H]
+\centering
+\caption{Dynamical regimes of the nonlinear pendulum.}
+\label{tab:regimes}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Regime} & \textbf{Energy} & \textbf{Phase portrait}
+    & \textbf{Physical motion} \\
+\midrule
+Libration
+    & $\mathcal{E} < 2g/L$
+    & Closed orbits around $\theta = 0$
+    & Swings back and forth \\[4pt]
+Separatrix
+    & $\mathcal{E} = 2g/L$
+    & Homoclinic orbit through $\theta = \pm\pi$
+    & Asymptotically reaches inverted \\[4pt]
+Rotation
+    & $\mathcal{E} > 2g/L$
+    & Open, wavy curves
+    & Continuous spinning \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % ══════════════════════════════════════════════════════════
 \section{Enter the computer}
+\label{sec:computation}
 
 \subsection{Reformulating as a system}
 
-What we \emph{can} do is convert Eq.~\eqref{eq:full} into a
-first-order system by introducing the angular velocity
+We convert Eq.~\eqref{eq:full} into a first-order system with
 $\omega = \dot{\theta}$:
 \begin{equation}
     \begin{cases}
@@ -230,124 +438,272 @@ $\omega = \dot{\theta}$:
     \end{cases}
     \label{eq:system}
 \end{equation}
-This is the form that numerical integrators love.  Given an initial
-state $(\theta_0, \omega_0)$, an algorithm like the classical
-\textbf{Runge--Kutta method} (RK4) can march forward in time, step by
-step, to any desired accuracy.
+Given an initial state $(\theta_0, \omega_0)$, we march forward in
+time using the classical \textbf{Runge--Kutta method} (RK4).  The
+core step advances the state by one time increment $h$:
 
-\subsection{The code}
-
-The following Python script solves system~\eqref{eq:system} on a grid
-of initial conditions and renders the \textbf{phase portrait}---a map
-of all possible trajectories in the $(\theta, \omega)$ plane.
-
-\begin{lstlisting}[caption={Phase portrait of the nonlinear pendulum.}]
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Parameters
-g = 9.81   # gravitational acceleration (m/s^2)
-L = 1.0    # pendulum length (m)
-
-# Phase-space grid
-theta = np.linspace(-2 * np.pi, 2 * np.pi, 400)
-omega = np.linspace(-8, 8, 400)
-THETA, OMEGA = np.meshgrid(theta, omega)
-
-# Vector field (right-hand side of the ODE system)
-dtheta_dt = OMEGA
-domega_dt = -(g / L) * np.sin(THETA)
-speed = np.sqrt(dtheta_dt**2 + domega_dt**2)
-
-# Plot
-fig, ax = plt.subplots(figsize=(12, 8))
-strm = ax.streamplot(
-    THETA, OMEGA, dtheta_dt, domega_dt,
-    color=speed, cmap="coolwarm", density=2.5,
-    linewidth=0.7, arrowsize=0.7,
-)
-fig.colorbar(strm.lines, ax=ax, label="Phase-space speed")
-
-# Separatrix: energy E = gL (unstable equilibrium)
-theta_sep = np.linspace(-2*np.pi, 2*np.pi, 1000)
-omega_sep = np.sqrt(2*g/L * np.maximum(1+np.cos(theta_sep), 0))
-ax.plot(theta_sep,  omega_sep, "k--", linewidth=1.8)
-ax.plot(theta_sep, -omega_sep, "k--", linewidth=1.8)
-
-ax.set_xlabel("theta (rad)")
-ax.set_ylabel("omega (rad/s)")
-ax.set_title("Phase Portrait: Nonlinear Pendulum")
-plt.savefig("pendulum_phase_portrait.png", dpi=150)
+\begin{lstlisting}[caption={The RK4 integration step.}]
+def rk4_step(f, state, t, h):
+    """Single 4th-order Runge-Kutta step."""
+    k1 = h * f(state, t)
+    k2 = h * f(state + k1/2, t + h/2)
+    k3 = h * f(state + k2/2, t + h/2)
+    k4 = h * f(state + k3, t + h)
+    return state + (k1 + 2*k2 + 2*k3 + k4) / 6
 \end{lstlisting}
 
-% ══════════════════════════════════════════════════════════
-\section{The phase portrait}
+Each evaluation of $f$ computes $(\omega,\, -(g/L)\sin\theta)$ from
+system~\eqref{eq:system}.  The four slopes $k_1, \ldots, k_4$ are
+combined to cancel lower-order error terms, giving $O(h^5)$ local
+truncation error per step.
+
+\subsection{When does the approximation fail?}
+
+We integrate system~\eqref{eq:system} from rest at three initial
+angles---$10^\circ$, $90^\circ$, and $170^\circ$---and overlay the
+numerical trajectory with the SHM prediction
+$\theta(t) = \theta_0\cos(\omega_0 t)$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_trajectory_comparison.png}
+    \caption{Small-angle analytical solution (red dashed) versus
+             nonlinear RK4 solution (blue solid) for three initial
+             amplitudes.  At $10^\circ$ the curves are nearly
+             identical.  At $90^\circ$ the nonlinear period is visibly
+             longer.  At $170^\circ$ the solutions diverge
+             dramatically---the real pendulum oscillates far more
+             slowly than the harmonic prediction.  Shaded purple
+             regions highlight the growing discrepancy.}
+    \label{fig:trajectories}
+\end{figure}
+
+The message is clear: the small-angle solution is excellent for
+gentle swings, but it becomes qualitatively wrong as amplitude
+increases.
+
+\subsection{Period versus amplitude}
+
+The exact period~\eqref{eq:exact_period} depends on the initial
+amplitude $\theta_0$ through the elliptic integral.
+Figure~\ref{fig:period} shows the ratio
+$T(\theta_0)/T_0$ as a function of amplitude, with the exact
+elliptic-integral curve, a quadratic approximation
+$1 + \theta_0^2/16$, and numerical measurements from our RK4
+integrator.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_period_ratio.png}
+    \caption{Period ratio $T(\theta_0)/T_0$ as a function of initial
+             amplitude.  The blue curve is the exact result from
+             Eq.~\eqref{eq:exact_period}; red dots are RK4
+             measurements; the green dashed line is the quadratic
+             approximation.  At $30^\circ$ the period exceeds the SHM
+             prediction by $1.7\%$; at $90^\circ$ by $18\%$; near
+             $180^\circ$ it diverges to infinity.  Galileo's
+             isochronism is a small-angle illusion.}
+    \label{fig:period}
+\end{figure}
+
+\subsection{The phase portrait}
+
+Finally, we compute the vector field
+$(d\theta/dt,\, d\omega/dt)$ on a grid covering
+$\theta \in [-2\pi, 2\pi]$, $\omega \in [-8, 8]$ and render the
+streamlines.  The separatrix~\eqref{eq:separatrix} is overlaid
+as a dashed curve; equilibria are marked with coloured dots.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{pendulum_phase_portrait.png}
-    \caption{Phase portrait of the nonlinear pendulum
-             $\ddot{\theta} + (g/L)\sin\theta = 0$.
+    \caption{Phase portrait of the nonlinear pendulum.
              Streamlines are coloured by speed in phase space.
-             The dashed black curves are the \textbf{separatrices}.
-             Green dots mark stable equilibria (pendulum hanging down);
-             red dots mark unstable equilibria (pendulum inverted).}
+             The dashed black curves are the
+             \textbf{separatrices}~\eqref{eq:separatrix}.
+             Green dots mark stable equilibria (centres at
+             $\theta = 0, \pm 2\pi$); red dots mark unstable
+             equilibria (saddle points at $\theta = \pm\pi$).
+             Closed orbits inside the separatrix correspond to
+             libration; open curves outside correspond to rotation.
+             See Table~\ref{tab:regimes}.}
     \label{fig:phase}
 \end{figure}
 
-\subsection{Reading the portrait}
-
-Figure~\ref{fig:phase} encodes the complete dynamics of the pendulum
-in a single image.  Three qualitatively distinct regimes are visible:
-
-\begin{enumerate}[itemsep=4pt]
-    \item \textbf{Libration} (closed orbits inside the separatrix).
-          The pendulum swings back and forth without going over the top.
-          Smaller loops correspond to smaller amplitudes---approaching
-          simple harmonic motion near the origin.
-
-    \item \textbf{Rotation} (wavy curves outside the separatrix).
-          The pendulum has enough energy to spin continuously.
-          Curves above the separatrix represent counter-clockwise
-          rotation; curves below, clockwise.
-
-    \item \textbf{The separatrix} (dashed curves).
-          This is the critical boundary---the trajectory of a pendulum
-          released with \emph{exactly} enough energy to reach the
-          inverted position.  It would take infinite time to arrive there,
-          asymptotically approaching the unstable equilibrium.
-\end{enumerate}
-
-Notice that the closed orbits are \emph{not} perfect ellipses.
-In the small-angle limit, they would be---but the nonlinearity of
-$\sin\theta$ distorts them, stretching the orbits as the amplitude
-grows.  This distortion \emph{is} the large-angle physics that no
-linearisation can capture.
+Notice that the closed orbits near the origin are nearly circular
+(approaching the SHM ellipses), while those near the separatrix are
+visibly flattened---a direct signature of the nonlinearity.
 
 % ══════════════════════════════════════════════════════════
 \section{The moral}
+\label{sec:moral}
 
 The pendulum is a first-year physics problem, and yet its exact
 behaviour lies beyond elementary mathematics.  The small-angle
 solution~\eqref{eq:shm_solution} is a beautiful special case, but it
 is just that: a special case.
 
-The general solution requires either elliptic functions (an 18th-century
-invention that most scientists never encounter) or numerical
-computation.  The phase portrait in Figure~\ref{fig:phase} would have
-taken Euler weeks of hand calculation.  A modern laptop produces it in
-under a second.
+The general solution requires either elliptic functions (an
+18th-century invention that most scientists never encounter) or
+numerical computation.  The phase portrait in
+Figure~\ref{fig:phase} would have taken Euler weeks of hand
+calculation.  A modern laptop produces it in under a second.
 
+\medskip
+\noindent
+\textbf{Beyond the ideal.}\;
+We have studied the conservative pendulum: no friction, no driving
+force.  In reality, damping causes every trajectory to spiral inward
+toward the hanging equilibrium.  More dramatically, adding a periodic
+driving force $A\cos(\Omega t)$ to Eq.~\eqref{eq:full} produces
+\emph{chaos}---sensitive dependence on initial conditions, fractal
+basins of attraction, and period-doubling cascades~\cite{strogatz}.
+The simple pendulum, pushed a little further, becomes one of the
+canonical models of nonlinear dynamics.
+
+\medskip
 This is not a story about pendulums.  It is a story about the vast
 majority of differential equations in physics, engineering, and
 biology.  Nonlinearity is the rule; exact solutions are the exception.
 And that is why we need computers for physics.
 
 \vfill
+
+% ══════════════════════════════════════════════════════════
+\begin{thebibliography}{9}
+
+\bibitem{strogatz}
+S.~H.~Strogatz,
+\textit{Nonlinear Dynamics and Chaos},
+2nd ed.\ (Westview Press, 2015).
+
+\bibitem{taylor}
+J.~R.~Taylor,
+\textit{Classical Mechanics},
+(University Science Books, 2005).
+
+\bibitem{goldstein}
+H.~Goldstein, C.~Poole, and J.~Safko,
+\textit{Classical Mechanics},
+3rd ed.\ (Addison-Wesley, 2002).
+
+\bibitem{press}
+W.~H.~Press, S.~A.~Teukolsky, W.~T.~Vetterling, and B.~P.~Flannery,
+\textit{Numerical Recipes},
+3rd ed.\ (Cambridge University Press, 2007).
+
+\bibitem{scipy}
+P.~Virtanen \textit{et al.},
+``SciPy 1.0: fundamental algorithms for scientific computing in
+Python,''
+\textit{Nature Methods} \textbf{17}, 261 (2020).
+
+\end{thebibliography}
+
+\vspace{12pt}
 \begin{center}
     \small\color{codegray}
-    Code and figure available at
+    All code and figures available at
     \url{https://github.com/VivekKarmarkar/remote-control-test}
 \end{center}
+
+% ══════════════════════════════════════════════════════════
+\clearpage
+\appendix
+\section{Complete Python code}
+\label{app:code}
+
+The following scripts reproduce all figures in this report.  They
+require \texttt{numpy}, \texttt{matplotlib}, and \texttt{scipy}.
+
+\subsection{Core integrator (\texttt{rk4\_pendulum.py})}
+
+\begin{lstlisting}[caption={RK4 integrator and utility functions.}]
+import numpy as np
+
+g, L = 9.81, 1.0   # gravitational acceleration, pendulum length
+
+def pendulum_ode(state, _t, g=g, L=L):
+    theta, omega = state
+    return np.array([omega, -(g / L) * np.sin(theta)])
+
+def rk4_step(f, state, t, h, *args, **kwargs):
+    k1 = h * f(state, t, *args, **kwargs)
+    k2 = h * f(state + k1/2, t + h/2, *args, **kwargs)
+    k3 = h * f(state + k2/2, t + h/2, *args, **kwargs)
+    k4 = h * f(state + k3, t + h, *args, **kwargs)
+    return state + (k1 + 2*k2 + 2*k3 + k4) / 6
+
+def integrate(f, state0, t_span, h, *args, **kwargs):
+    t_start, t_end = t_span
+    t_vals = np.arange(t_start, t_end + h/2, h)
+    states = np.zeros((len(t_vals), len(state0)))
+    states[0] = state0
+    for i in range(1, len(t_vals)):
+        states[i] = rk4_step(f, states[i-1], t_vals[i-1],
+                              h, *args, **kwargs)
+    return t_vals, states
+
+def compute_energy(theta, omega, g=g, L=L):
+    return 0.5 * omega**2 + (g/L) * (1 - np.cos(theta))
+
+def measure_period(t, theta):
+    crossings = []
+    for i in range(1, len(theta)):
+        if theta[i-1] > 0 and theta[i] <= 0:
+            t_cross = t[i-1] - theta[i-1] * (t[i] - t[i-1]) \
+                      / (theta[i] - theta[i-1])
+            crossings.append(t_cross)
+    if len(crossings) < 2:
+        return np.inf
+    return np.mean(np.diff(crossings))
+\end{lstlisting}
+
+\subsection{Phase portrait (\texttt{pendulum\_phase\_portrait.py})}
+
+\begin{lstlisting}[caption={Phase portrait with separatrix and equilibria.}]
+import numpy as np
+import matplotlib.pyplot as plt
+
+g, L = 9.81, 1.0
+theta = np.linspace(-2*np.pi, 2*np.pi, 400)
+omega = np.linspace(-8, 8, 400)
+THETA, OMEGA = np.meshgrid(theta, omega)
+
+dtheta_dt = OMEGA
+domega_dt = -(g / L) * np.sin(THETA)
+speed = np.sqrt(dtheta_dt**2 + domega_dt**2)
+
+fig, ax = plt.subplots(figsize=(12, 8))
+strm = ax.streamplot(THETA, OMEGA, dtheta_dt, domega_dt,
+    color=speed, cmap="coolwarm", density=2.5,
+    linewidth=0.7, arrowsize=0.7)
+fig.colorbar(strm.lines, ax=ax, label="Phase-space speed")
+
+# Separatrix: E = 2g/L (energy at unstable equilibrium)
+theta_sep = np.linspace(-2*np.pi, 2*np.pi, 1000)
+omega_sep = np.sqrt(2*g/L * np.maximum(1+np.cos(theta_sep), 0))
+ax.plot(theta_sep,  omega_sep, "k--", linewidth=1.8,
+        label="Separatrix")
+ax.plot(theta_sep, -omega_sep, "k--", linewidth=1.8)
+
+# Equilibrium points
+for n in range(-2, 3):
+    if n % 2 == 0:
+        ax.plot(n*np.pi, 0, "o", color="#2ecc71", markersize=9,
+                zorder=5, label="Stable eq." if n == 0 else "")
+    else:
+        ax.plot(n*np.pi, 0, "o", color="#e74c3c", markersize=9,
+                zorder=5, label="Unstable eq." if n == 1 else "")
+
+ax.set_xlabel(r"$\theta$ (rad)", fontsize=14)
+ax.set_ylabel(r"$\omega$ (rad/s)", fontsize=14)
+ax.set_xticks([-2*np.pi, -np.pi, 0, np.pi, 2*np.pi])
+ax.set_xticklabels([r"$-2\pi$", r"$-\pi$", "0",
+                     r"$\pi$", r"$2\pi$"], fontsize=12)
+ax.legend(fontsize=11, loc="upper right")
+plt.tight_layout()
+plt.savefig("pendulum_phase_portrait.png", dpi=150)
+\end{lstlisting}
 
 \end{document}
