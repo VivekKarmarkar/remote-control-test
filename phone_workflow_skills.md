@@ -11,3 +11,4 @@ Remote development workflow: give instructions from phone → Claude executes on
 | PDF creation (pdflatex) | Yes | ✅ |
 | Permissions handling | Yes | ✅ |
 | PPT creation | No | ❓ |
+| GPU access | No | ❓ |
