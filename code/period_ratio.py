@@ -65,5 +65,5 @@ ax.legend(fontsize=11, loc="upper left")
 ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig("fig_period_ratio.png", dpi=150, bbox_inches="tight")
-print("Saved fig_period_ratio.png")
+plt.savefig("../plots/fig_period_ratio.png", dpi=150, bbox_inches="tight")
+print("Saved ../plots/fig_period_ratio.png")

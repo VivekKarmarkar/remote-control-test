@@ -71,5 +71,5 @@ ax.axvline(0, color="k", linewidth=0.4)
 ax.legend(fontsize=11, loc="upper right")
 
 plt.tight_layout()
-plt.savefig("pendulum_phase_portrait.png", dpi=150, bbox_inches="tight")
-print("Saved to pendulum_phase_portrait.png")
+plt.savefig("../plots/pendulum_phase_portrait.png", dpi=150, bbox_inches="tight")
+print("Saved ../plots/pendulum_phase_portrait.png")

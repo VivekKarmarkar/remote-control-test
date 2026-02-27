@@ -40,5 +40,5 @@ fig.suptitle(
     fontsize=15, y=1.02,
 )
 plt.tight_layout()
-plt.savefig("fig_trajectory_comparison.png", dpi=150, bbox_inches="tight")
-print("Saved fig_trajectory_comparison.png")
+plt.savefig("../plots/fig_trajectory_comparison.png", dpi=150, bbox_inches="tight")
+print("Saved ../plots/fig_trajectory_comparison.png")

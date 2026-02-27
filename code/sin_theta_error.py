@@ -52,5 +52,5 @@ ax_inset.grid(True, alpha=0.3)
 ax_inset.set_title(r"$\sin\theta$ vs $\theta$ (radians)", fontsize=10)
 
 plt.tight_layout()
-plt.savefig("fig_sin_error.png", dpi=150, bbox_inches="tight")
-print("Saved fig_sin_error.png")
+plt.savefig("../plots/fig_sin_error.png", dpi=150, bbox_inches="tight")
+print("Saved ../plots/fig_sin_error.png")
