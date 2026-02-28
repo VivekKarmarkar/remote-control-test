@@ -8,12 +8,12 @@ Remote development workflow: give instructions from phone → Claude executes on
 | Plan mode | Yes | ✅ |
 | Agents | Yes | ✅ |
 | Git management | Yes | ✅ |
+| GPU access | No | ❓ |
 | Python coding | Yes | ✅ |
 | Matplotlib plotting | Yes | ✅ |
 | LaTeX report writing | Yes | ✅ |
 | PDF creation (pdflatex) | Yes | ✅ |
 | PPT creation | No | ❓ |
-| GPU access | No | ❓ |
 
 ## What category of projects is this optimal for?
 
