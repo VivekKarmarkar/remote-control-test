@@ -17,7 +17,8 @@ Remote development workflow: give instructions from phone → Claude executes on
 
 - Scientific computing
   - PAT scan PhD project
-  - Pins failures
+  - PINNs failures
+  - PINN-QDE writing
 
 ## Next planned test
 
