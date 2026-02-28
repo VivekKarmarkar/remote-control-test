@@ -30,6 +30,7 @@ Remote development workflow: give instructions from phone → Claude executes on
 
 - Have phone charger with you
 - Use power bank for phone
+- If session hangs: navigate to another chat and come back, or type "hey are you there"
 
 ## What category of projects is this optimal for?
 
