@@ -16,6 +16,8 @@ Remote development workflow: give instructions from phone → Claude executes on
 ## What category of projects is this optimal for?
 
 - Scientific computing
+  - PAT scan PhD project
+  - Pins failures
 
 ## Next planned test
 
