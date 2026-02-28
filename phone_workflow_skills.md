@@ -21,6 +21,8 @@ Remote development workflow: give instructions from phone → Claude executes on
 2. Go to your phone → Claude Code app → click on Code → check if the current session appears
 3. Send a hello message to verify things are working
 4a. Do a test commit and push with a Hello World Python script and a sample plot
+4b. Ask Claude Code for the GitHub link
+4c. Open the link on your phone to verify
 
 ## Gotchas
 
