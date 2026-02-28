@@ -15,7 +15,7 @@ Remote development workflow: give instructions from phone → Claude executes on
 
 ## What category of projects is this optimal for?
 
-- **Scientific computing** — simulations, numerical methods, data analysis, technical reports, plotting
+- Scientific computing
 
 ## Next planned test
 
