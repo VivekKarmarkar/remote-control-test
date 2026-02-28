@@ -24,6 +24,7 @@ Remote development workflow: give instructions from phone → Claude executes on
 4b. Ask Claude Code for the GitHub link
 4c. Open the link on your phone to verify
 5. Go for a walk
+6. Watch the magic happen while you walk
 
 ## Gotchas
 
