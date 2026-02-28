@@ -18,10 +18,10 @@ Remote development workflow: give instructions from phone → Claude executes on
 ## What category of projects is this optimal for?
 
 - Scientific computing
-  - PAT scan PhD project
-  - PINNs failures
-  - PINN-QDE writing
   - GPT-Bhojan ViT-finetuning (the scientific computing part)
+  - PINNs failures
+  - PAT scan PhD project
+  - PINN-QDE writing
 
 ## Next planned test
 
