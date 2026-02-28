@@ -4,6 +4,8 @@ Remote development workflow: give instructions from phone → Claude executes on
 
 | Skill | Tested | Output |
 |-------|--------|--------|
+| Plan mode | Yes | ✅ |
+| Agents | Yes | ✅ |
 | Git management | Yes | ✅ |
 | Python coding | Yes | ✅ |
 | Matplotlib plotting | Yes | ✅ |
