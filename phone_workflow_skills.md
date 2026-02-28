@@ -15,6 +15,11 @@ Remote development workflow: give instructions from phone → Claude executes on
 | PDF creation (pdflatex) | Yes | ✅ |
 | PPT creation | No | ❓ |
 
+## Gotchas
+
+- Phone running out of battery — have your charger with you
+- If sessions get intense, use a power bank
+
 ## What category of projects is this optimal for?
 
 - Scientific computing
