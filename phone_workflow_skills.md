@@ -23,6 +23,7 @@ Remote development workflow: give instructions from phone → Claude executes on
 4a. Do a test commit and push with a Hello World Python script and a sample plot
 4b. Ask Claude Code for the GitHub link
 4c. Open the link on your phone to verify
+5. Go for a walk
 
 ## Gotchas
 
