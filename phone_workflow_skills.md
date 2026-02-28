@@ -14,6 +14,7 @@ Remote development workflow: give instructions from phone → Claude executes on
 | LaTeX report writing | Yes | ✅ |
 | PDF creation (pdflatex) | Yes | ✅ |
 | PPT creation | No | ❓ |
+| Web Search | No | ❓ |
 
 ## Getting started
 

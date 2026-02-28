@@ -1,8 +1,6 @@
-# 🚶 I Built a 10-Page Physics Report While Walking — Here's How
+# 🚶 Claude Code's Remote Control Workflow for Scientific Computing: A Practical Guide
 
-## Claude Code's Remote Control Workflow: A Practical Guide
-
----
+## 🚀 Introduction
 
 What if you could write code, generate plots, compile LaTeX documents, and push to GitHub — all from your phone, while going for a walk?
 
