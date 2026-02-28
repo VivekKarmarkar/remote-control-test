@@ -40,6 +40,10 @@ Remote development workflow: give instructions from phone → Claude executes on
   - PAT scan PhD project
   - PINN-QDE writing
 
+## Articles to write
+
+- Remote Control Workflow Guide (with a paragraph about the pendulum project as proof of concept)
+
 ## Next planned test
 
 **RNN Pendulum Predictor + Final Slides**
