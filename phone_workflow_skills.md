@@ -16,3 +16,11 @@ Remote development workflow: give instructions from phone → Claude executes on
 ## What category of projects is this optimal for?
 
 - **Scientific computing** — simulations, numerical methods, data analysis, technical reports, plotting
+
+## Next planned test
+
+**RNN Pendulum Predictor + Final Slides**
+- Generate pendulum trajectory dataset across many parameters/initial conditions
+- Train a recurrent neural network to predict time evolution (requires GPU access test)
+- Compare RNN-predicted phase portrait against ground truth
+- Create final presentation slides summarizing the full project
