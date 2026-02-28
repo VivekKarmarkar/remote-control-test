@@ -17,8 +17,8 @@ Remote development workflow: give instructions from phone → Claude executes on
 
 ## Gotchas
 
-- Phone running out of battery — have your charger with you
-- If sessions get intense, use a power bank
+- Have phone charger with you
+- Use power bank for phone
 
 ## What category of projects is this optimal for?
 
